@@ -1,0 +1,25 @@
+## Rust
+/target/
+Cargo.lock
+
+## Intellij Idea
+.idea/
+.run/
+
+## Visual Studio Code
+.vscode/
+
+## Sublime Text
+*.sublime-workspace
+*.sublime-project
+
+## macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+## Windows
+Thumbs.db
+ehthumbs.db
+ehthumbs_vista.db
+*.lnk

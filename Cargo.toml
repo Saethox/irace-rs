@@ -1,0 +1,32 @@
+[package]
+name = "irace-rs"
+version = "0.1.0"
+authors = ["Jonathan Wurth <jonathan.wurth@uni-a.de>"]
+edition = "2021"
+description = "Rust bindings for irace: Iterated Racing for Automatic Algorithm Configuration."
+readme = "README.md"
+license = "GPL-3.0-or-later"
+repository = "https://github.com/saethox/irace-rs"
+keywords = ["metaheuristic", "optimization", "tuning"]
+categories = ["science", "algorithms"]
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+mahf = "0.1.0"
+pyo3 = { version = "0.19.2" }
+num = "0.4.0"
+rayon = "1.7.0"
+eyre = "0.6.8"
+color-eyre = "0.6.2"
+typed-builder = "0.14.0"
+downcast-rs = "1.2.0"
+trait-set = "0.3.0"
+
+[dev-dependencies]
+mahf-bmf = "0.1.0"
+
+[patch.crates-io]
+mahf = { path = "../mahf" }
+mahf-bmf = { path = "../mahf-bmf" }
