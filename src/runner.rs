@@ -1,7 +1,7 @@
 use std::sync::Arc;
 
 use downcast_rs::Downcast;
-use mahf::{ExecResult, SingleObjective};
+use mahf::{problems::Evaluate, ExecResult, Problem, SingleObjective};
 use pyo3::{exceptions::PyValueError, prelude::*};
 use trait_set::trait_set;
 
@@ -17,8 +17,23 @@ trait_set! {
 ///
 /// The target runner executes some algorithm using the parameters, instance and seed
 /// provided by the [`Experiment`] and returns its performance as a single metric.
-pub trait TargetRunner<I>: Send + 'static {
+pub trait TargetRunner<I: Instance>: Send + 'static {
     fn run(&self, scenario: &Scenario, experiment: Experiment<I>) -> ExecResult<SingleObjective>;
+}
+
+impl<I: Instance> TargetRunner<I> for Box<dyn TargetRunner<I>> {
+    fn run(&self, scenario: &Scenario, experiment: Experiment<I>) -> ExecResult<SingleObjective> {
+        (**self).run(scenario, experiment)
+    }
+}
+
+impl<I: Instance, F> TargetRunner<I> for F
+where
+    F: Fn(&Scenario, Experiment<I>) -> ExecResult<SingleObjective> + Send + 'static,
+{
+    fn run(&self, scenario: &Scenario, experiment: Experiment<I>) -> ExecResult<SingleObjective> {
+        (self)(scenario, experiment)
+    }
 }
 
 /// A type-erased [`TargetRunner`].
@@ -33,7 +48,7 @@ trait ErasedTargetRunner: Send + 'static {
 }
 
 /// Wrapper to implement [`ErasedTargetRunner`] on.
-struct TargetRunnerWrapper<I>(Box<dyn TargetRunner<I>>);
+struct TargetRunnerWrapper<I: Instance>(Box<dyn TargetRunner<I>>);
 
 impl<I: Instance> ErasedTargetRunner for TargetRunnerWrapper<I> {
     fn run(
