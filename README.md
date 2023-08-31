@@ -17,7 +17,9 @@ and made available to the R interpreter again.
 
 The necessary functionality is available in [`PyO3`](https://github.com/PyO3/pyo3), which is why this approach was
 chosen, despite having some overhead by running an additional instance of the Python interpreter.
-Another benefit of this is that Python's multiprocessing can be used to run separate instances of `irace` in parallel.
+
+Another approach would be to use [`Rcpp`](https://github.com/RcppCore/Rcpp) and [`Rinside`](https://github.com/eddelbuettel/rinside) together with [`bindgen`](https://github.com/rust-lang/rust-bindgen)
+to call the `irace` R package directly.
 
 ## Getting Started
 
