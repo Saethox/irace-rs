@@ -316,12 +316,12 @@ impl ParamSpace {
     pub(crate) fn as_py_object(&self, py: Python, irace: &PyModule) -> PyResult<PyObject> {
         let mut py_subspaces = Vec::new();
 
-        for subspace in self.subspaces.values() {
+        for (name, subspace) in &self.subspaces {
             let dict = PyDict::new(py);
 
             let py_subspace = match subspace {
                 ParamSubspace::Real(real) => {
-                    dict.set_item("name", real.name.clone())?;
+                    dict.set_item("name", name.clone())?;
                     dict.set_item("lower", real.lower)?;
                     dict.set_item("upper", real.upper)?;
                     dict.set_item("log", real.log)?;
@@ -329,20 +329,20 @@ impl ParamSpace {
                     irace.getattr("Real")?.call((), Some(dict))?
                 }
                 ParamSubspace::Integer(integer) => {
-                    dict.set_item("name", integer.name.clone())?;
+                    dict.set_item("name", name.clone())?;
                     dict.set_item("lower", integer.lower)?;
                     dict.set_item("upper", integer.upper)?;
                     dict.set_item("log", integer.log)?;
 
                     irace.getattr("Integer")?.call((), Some(dict))?
                 }
-                ParamSubspace::Bool(bool) => {
-                    dict.set_item("name", bool.name.clone())?;
+                ParamSubspace::Bool(_) => {
+                    dict.set_item("name", name.clone())?;
 
                     irace.getattr("Bool")?.call((), Some(dict))?
                 }
                 ParamSubspace::Categorical(list) => {
-                    dict.set_item("name", list.name.clone())?;
+                    dict.set_item("name", name.clone())?;
                     dict.set_item("variants", (0..list.variants.len()).collect::<Vec<_>>())?;
 
                     irace.getattr("Categorical")?.call((), Some(dict))?
