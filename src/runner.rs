@@ -1,7 +1,7 @@
 use std::sync::Arc;
 
 use downcast_rs::Downcast;
-use mahf::{problems::Evaluate, ExecResult, Problem, SingleObjective};
+use mahf::{ExecResult, SingleObjective};
 use pyo3::{exceptions::PyValueError, prelude::*};
 use trait_set::trait_set;
 

@@ -14,11 +14,13 @@ use crate::{
 };
 
 mod experiment;
+mod instance;
 pub mod param_space;
 mod runner;
 pub mod scenario;
 
 pub use experiment::Experiment;
+pub use instance::{DistributedInstance, EvaluateDistributed};
 pub use runner::{Instance, TargetRunner};
 
 static PYTHON_INIT: Once = Once::new();

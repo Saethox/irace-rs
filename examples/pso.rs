@@ -4,12 +4,12 @@ use eyre::ContextCompat;
 use irace_rs::{
     param_space::ParamSpace,
     scenario::{Scenario, Verbosity},
-    Experiment,
+    DistributedInstance, Experiment,
 };
 use mahf::{
     identifier::Global,
     prelude::*,
-    problems::{KnownOptimumProblem, LimitedVectorProblem, ProblemInstance},
+    problems::{KnownOptimumProblem, LimitedVectorProblem},
     state::common::Evaluator,
     ExecResult, Random, SingleObjective, SingleObjectiveProblem,
 };
@@ -53,7 +53,7 @@ where
 
 pub fn target_runner<P>(
     _scenario: &Scenario,
-    experiment: Experiment<ProblemInstance<P>>,
+    experiment: Experiment<DistributedInstance<P>>,
 ) -> ExecResult<SingleObjective>
 where
     P: SingleObjectiveProblem
@@ -90,7 +90,7 @@ where
         .wrap_err("missing best objective value")
 }
 
-pub fn problem_instances(dim: usize) -> Vec<ProblemInstance<BenchmarkFunction>> {
+pub fn problem_instances(dim: usize) -> Vec<DistributedInstance<BenchmarkFunction>> {
     [
         BenchmarkFunction::sphere(dim),
         BenchmarkFunction::rastrigin(dim),
@@ -104,7 +104,7 @@ pub fn problem_instances(dim: usize) -> Vec<ProblemInstance<BenchmarkFunction>> 
         BenchmarkFunction::styblinski_tang(dim),
     ]
     .into_iter()
-    .map(|problem| ProblemInstance::new(Arc::new(problem), evaluate::Sequential::new()))
+    .map(|problem| DistributedInstance::new(Arc::new(problem), evaluate::Sequential::new()))
     .collect()
 }
 
