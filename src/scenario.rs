@@ -7,7 +7,7 @@ use pyo3::{
 use typed_builder::TypedBuilder;
 
 /// The stdout verbosity of `irace`.
-#[derive(Copy, Clone)]
+#[derive(Debug, Copy, Clone)]
 pub enum Verbosity {
     /// No stdout output.
     Silent = 0,
@@ -25,27 +25,27 @@ pub enum Verbosity {
 ///
 /// Currently, only a small percentage of the parameters available
 /// to the `irace` R package are supported.
-#[derive(TypedBuilder)]
+#[derive(Debug, Clone, TypedBuilder)]
 pub struct Scenario {
     /// The upper bound of experiments to perform (tuning budget).
-    max_experiments: u32,
+    pub max_experiments: u32,
     /// Specifies if elitist `irace` should be used.
     #[builder(default = true)]
-    elitist: bool,
+    pub elitist: bool,
     /// Specifies if the target algorithm is deterministic (`true`) or stochastic (`false`).
     #[builder(default = false)]
-    deterministic: bool,
+    pub deterministic: bool,
     /// The number of experiments to perform in parallel.
     ///
     /// Note that parallelism on Windows is currently not supported, and a value > 1 will abort.
     #[builder(default = 1)]
-    num_jobs: usize,
+    pub num_jobs: usize,
     /// The initial RNG seed.
     #[builder(default = None)]
-    seed: Option<u64>,
+    pub seed: Option<u64>,
     /// The verbosity of the stdout output of `irace`.
     #[builder(default = Verbosity::Silent)]
-    verbose: Verbosity,
+    pub verbose: Verbosity,
 }
 
 impl Scenario {
