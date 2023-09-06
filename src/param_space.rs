@@ -181,7 +181,7 @@ impl ParamSpace {
         variants: impl IntoIterator<Item = impl Into<String>>,
     ) {
         let name = name.into();
-        let variants = variants.into_iter().map(|value| Param::new(value.into()));
+        let variants = variants.into_iter().map(|value| value.into());
         self.add_categorical(name, variants);
     }
 
