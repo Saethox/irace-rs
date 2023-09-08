@@ -28,7 +28,11 @@ pub enum Verbosity {
 #[derive(Debug, Clone, TypedBuilder)]
 pub struct Scenario {
     /// The upper bound of experiments to perform (tuning budget).
-    pub max_experiments: u32,
+    #[builder(default = None, setter(strip_option))]
+    pub max_experiments: Option<u32>,
+    /// The lower bound of experiments to perform (tuning budget).
+    #[builder(setter(strip_option))]
+    pub min_experiments: Option<u32>,
     /// Specifies if elitist `irace` should be used.
     #[builder(default = true)]
     pub elitist: bool,
@@ -58,6 +62,9 @@ impl Scenario {
         let kwargs = PyDict::new(py);
         kwargs
             .set_item("max_experiments", self.max_experiments)
+            .unwrap();
+        kwargs
+            .set_item("min_experiments", self.min_experiments)
             .unwrap();
         kwargs.set_item("elitist", self.elitist)?;
         kwargs.set_item("instances", (0..num_instances).collect::<Vec<_>>())?;
