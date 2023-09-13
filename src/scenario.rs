@@ -31,7 +31,7 @@ pub struct Scenario {
     #[builder(default = None, setter(strip_option))]
     pub max_experiments: Option<u32>,
     /// The lower bound of experiments to perform (tuning budget).
-    #[builder(setter(strip_option))]
+    #[builder(default = None, setter(strip_option))]
     pub min_experiments: Option<u32>,
     /// Specifies if elitist `irace` should be used.
     #[builder(default = true)]
