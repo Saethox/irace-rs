@@ -41,8 +41,8 @@ pub struct Scenario {
     #[builder(default = 1)]
     pub num_jobs: usize,
     /// The initial RNG seed.
-    #[builder(default = None)]
-    pub seed: Option<u64>,
+    #[builder(default = None, setter(strip_option))]
+    pub seed: Option<u32>,
     /// The verbosity of the stdout output of `irace`.
     #[builder(default = Verbosity::Silent)]
     pub verbose: Verbosity,
