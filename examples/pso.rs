@@ -111,12 +111,13 @@ pub fn problem_instances(dim: usize) -> Vec<DistributedInstance<BenchmarkFunctio
 fn main() -> ExecResult<()> {
     color_eyre::install()?;
 
-    let instances = problem_instances(30);
+    let instances = problem_instances(5);
 
     let scenario: Arc<_> = Scenario::builder()
-        .max_experiments(180)
+        .max_experiments(1000)
         .num_jobs(1)
-        .verbose(Verbosity::Debug)
+        .verbose(Verbosity::Minimal)
+        .seed(42)
         .build()
         .into();
 
@@ -131,8 +132,8 @@ fn main() -> ExecResult<()> {
 
     let result = irace_rs::irace(target_runner, instances, scenario, param_space.clone())?;
 
-    println!("{:?}", result);
-    println!("{:?}", param_space);
+    println!("Result: {:?}", result);
+    println!("Parameter Space: {:?}", param_space);
 
     Ok(())
 }
