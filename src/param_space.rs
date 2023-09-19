@@ -1,10 +1,8 @@
 //! Specifying parameter spaces.
 
-use std::{
-    collections::HashMap,
-    fmt::{Debug, Formatter},
-};
+use std::fmt::{Debug, Formatter};
 
+use indexmap::IndexMap;
 use mahf::params::{Param, Parameter};
 use num::Num;
 use pyo3::{
@@ -117,14 +115,14 @@ impl Debug for ParamSubspace {
 /// A named parameter space.
 #[derive(Default, Clone)]
 pub struct ParamSpace {
-    subspaces: HashMap<String, ParamSubspace>,
+    subspaces: IndexMap<String, ParamSubspace>,
 }
 
 impl ParamSpace {
     /// Constructs a new `ParamSpace`.
     pub fn new() -> Self {
         Self {
-            subspaces: HashMap::new(),
+            subspaces: Default::default(),
         }
     }
 
@@ -306,9 +304,14 @@ impl Debug for ParamSpace {
     }
 }
 
-impl From<HashMap<String, ParamSubspace>> for ParamSpace {
-    fn from(value: HashMap<String, ParamSubspace>) -> Self {
-        Self { subspaces: value }
+impl<T> From<T> for ParamSpace
+where
+    T: Into<IndexMap<String, ParamSubspace>>,
+{
+    fn from(value: T) -> Self {
+        Self {
+            subspaces: value.into(),
+        }
     }
 }
 

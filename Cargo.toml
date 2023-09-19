@@ -19,10 +19,11 @@ pyo3 = { version = "0.19.2" }
 num = "0.4.0"
 eyre = "0.6.8"
 color-eyre = "0.6.2"
-typed-builder = "0.14.0"
+typed-builder = "0.16.0"
 downcast-rs = "1.2.0"
 trait-set = "0.3.0"
-dyn-clone = "1.0.11"
+dyn-clone = "1.0.13"
+indexmap = "2.0.0"
 
 [dev-dependencies]
 mahf-bmf = "0.1.0"
