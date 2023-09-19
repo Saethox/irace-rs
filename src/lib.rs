@@ -38,9 +38,13 @@ fn register_site_packages() -> PyResult<()> {
         let sys = PyModule::import(py, "sys")?;
         let path = sys.getattr("path")?;
 
-        path.call_method1("append", (env!("PYO3_PYTHON_VENV"),))?;
-        path.call_method1("append", (env!("PYO3_PYTHON_SITE_PACKAGES"),))?;
-        if let Some(irace_home) = option_env!("IRACE_HOME") {
+        let venv =
+            std::env::var("PYO3_PYTHON_VENV").map_err(|e| PyValueError::new_err(e.to_string()))?;
+        path.call_method1("append", (venv,))?;
+        let site_packages = std::env::var("PYO3_PYTHON_SITE_PACKAGES")
+            .map_err(|e| PyValueError::new_err(e.to_string()))?;
+        path.call_method1("append", (site_packages,))?;
+        if let Ok(irace_home) = std::env::var("IRACE_HOME") {
             path.call_method1("append", (irace_home,))?;
         }
 
@@ -78,7 +82,7 @@ pub fn irace<I: Instance>(
         // Call irace and extract the found params.
         let result = Python::eval(
             py,
-            "irace.irace(target_runner, scenario, parameter_space)",
+            "irace.irace(target_runner=target_runner, scenario=scenario, parameter_space=parameter_space)",
             None,
             Some(locals),
         )?
