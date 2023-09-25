@@ -27,7 +27,7 @@ to call the `irace` R package directly.
 
 - [The Rust Programming Language](https://rust-lang.org)
 - Either `gcc` or `clang`
-- [`irace`](https://mlopez-ibanez.github.io/irace/#installing-the-irace-package) R package
+- [`irace`](https://mlopez-ibanez.github.io/irace/#github-development-version) R package (development version)
 - [`iracepy-tiny`](https://github.com/Saethox/iracepy-tiny) Python package
 
 ### Installation
