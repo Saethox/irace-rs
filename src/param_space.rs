@@ -127,33 +127,46 @@ impl ParamSpace {
     }
 
     /// Adds a new [`ParamSubspace`] with the given `name`.
-    pub fn add_raw(&mut self, name: String, subspace: ParamSubspace) {
+    pub fn add_raw(&mut self, name: String, subspace: ParamSubspace) -> &mut Self {
         self.subspaces.insert(name, subspace);
+        self
     }
 
     /// Adds a new real parameter with the given `name` and bounds.
     ///
     /// If `log` is `true`, the values are sampled from a logarithmic space.
-    pub fn add_real(&mut self, name: impl Into<String>, lower: f64, upper: f64, log: bool) {
+    pub fn add_real(
+        &mut self,
+        name: impl Into<String>,
+        lower: f64,
+        upper: f64,
+        log: bool,
+    ) -> &mut Self {
         let name = name.into();
         let numerical = NumericalSubspace::new(name.clone(), lower, upper, log);
-        self.add_raw(name, ParamSubspace::Real(numerical));
+        self.add_raw(name, ParamSubspace::Real(numerical))
     }
 
     /// Adds a new integer parameter with the given `name` and bounds.
     ///
     /// If `log` is `true`, the values are sampled from a logarithmic space.
-    pub fn add_integer(&mut self, name: impl Into<String>, lower: u32, upper: u32, log: bool) {
+    pub fn add_integer(
+        &mut self,
+        name: impl Into<String>,
+        lower: u32,
+        upper: u32,
+        log: bool,
+    ) -> &mut Self {
         let name = name.into();
         let numerical = NumericalSubspace::new(name.clone(), lower, upper, log);
-        self.add_raw(name, ParamSubspace::Integer(numerical));
+        self.add_raw(name, ParamSubspace::Integer(numerical))
     }
 
     /// Adds a new boolean parameter with the given `name`.
-    pub fn add_bool(&mut self, name: impl Into<String>) {
+    pub fn add_bool(&mut self, name: impl Into<String>) -> &mut Self {
         let name = name.into();
         let discrete = DiscreteSubspace::new(name.clone(), [true, false]);
-        self.add_raw(name, ParamSubspace::Bool(discrete));
+        self.add_raw(name, ParamSubspace::Bool(discrete))
     }
 
     /// Adds a new categorical parameter with the given `name` and `variants` of type `T`.
@@ -161,13 +174,13 @@ impl ParamSpace {
         &mut self,
         name: impl Into<String>,
         variants: impl IntoIterator<Item = T>,
-    ) {
+    ) -> &mut Self {
         let name = name.into();
         let discrete = DiscreteSubspace::new(
             name.clone(),
             variants.into_iter().map(|value| Param::new(value)),
         );
-        self.add_raw(name, ParamSubspace::Categorical(discrete));
+        self.add_raw(name, ParamSubspace::Categorical(discrete))
     }
 
     /// Adds a new categorical parameter with the given `name` and string `variants`.
@@ -177,10 +190,10 @@ impl ParamSpace {
         &mut self,
         name: impl Into<String>,
         variants: impl IntoIterator<Item = impl Into<String>>,
-    ) {
+    ) -> &mut Self {
         let name = name.into();
         let variants = variants.into_iter().map(|value| value.into());
-        self.add_categorical(name, variants);
+        self.add_categorical(name, variants)
     }
 
     /// Adds a nested parameter space with the given `name`.
@@ -188,9 +201,9 @@ impl ParamSpace {
     /// For flattening a nested space, see [`flatten`].
     ///
     /// [`flatten`]: Self::flatten
-    pub fn add_nested(&mut self, name: impl Into<String>, param_space: ParamSpace) {
+    pub fn add_nested(&mut self, name: impl Into<String>, param_space: ParamSpace) -> &mut Self {
         let name = name.into();
-        self.add_raw(name, ParamSubspace::Nested(param_space));
+        self.add_raw(name, ParamSubspace::Nested(param_space))
     }
 
     /// Adds a new real parameter with the given `name` and bounds.
