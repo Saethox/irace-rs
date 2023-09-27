@@ -313,7 +313,8 @@ impl ParamSpace {
 
 impl Debug for ParamSpace {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        self.subspaces.fmt(f)
+        let values: Vec<_> = self.subspaces.values().collect();
+        values.fmt(f)
     }
 }
 

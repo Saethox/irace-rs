@@ -4,7 +4,7 @@ use eyre::ContextCompat;
 use irace_rs::{
     param_space::ParamSpace,
     scenario::{Scenario, Verbosity},
-    DistributedInstance, Experiment,
+    DistributedInstance, Experiment, Run,
 };
 use mahf::{
     identifier::Global,
@@ -111,13 +111,12 @@ pub fn problem_instances(dim: usize) -> Vec<DistributedInstance<BenchmarkFunctio
 fn main() -> ExecResult<()> {
     color_eyre::install()?;
 
-    let instances = problem_instances(5);
+    let instances = problem_instances(30);
 
     let scenario: Arc<_> = Scenario::builder()
-        .min_experiments(1000)
-        .num_jobs(1)
-        .verbose(Verbosity::Minimal)
-        .seed(42)
+        .min_experiments(180)
+        .num_jobs(2)
+        .verbose(Verbosity::Silent)
         .build()
         .into();
 
@@ -130,7 +129,20 @@ fn main() -> ExecResult<()> {
         .with_real("c_2", 0.3, 3.0, false)
         .into();
 
-    let result = irace_rs::irace(target_runner, instances, scenario, param_space.clone())?;
+    let runs = (0..8).map(|index| {
+        let target_runner = move |scenario: &Scenario, experiment: Experiment<_>| {
+            println!("[Runner {}] {:?}", index, experiment.params);
+            target_runner(scenario, experiment)
+        };
+        Run::new(
+            target_runner,
+            instances.clone(),
+            scenario.clone(),
+            param_space.clone(),
+        )
+    });
+
+    let result = irace_rs::multi_irace(runs, 8, Some(42))?;
 
     println!("Result: {:?}", result);
     println!("Parameter Space: {:?}", param_space);
