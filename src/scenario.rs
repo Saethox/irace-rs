@@ -1,5 +1,7 @@
 //! Configuring `irace`.
 
+use std::path::PathBuf;
+
 use pyo3::{
     types::{PyDict, PyModule},
     PyObject, PyResult, Python, ToPyObject,
@@ -39,6 +41,12 @@ pub struct Scenario {
     /// Specifies if the target algorithm is deterministic (`true`) or stochastic (`false`).
     #[builder(default = false)]
     pub deterministic: bool,
+    /// The path of the log file (by default `irace.Rdata`).
+    #[builder(default = None, setter(into, strip_option))]
+    pub log_file: Option<PathBuf>,
+    /// The working directory of `irace`.
+    #[builder(default = None, setter(into, strip_option))]
+    pub exec_dir: Option<PathBuf>,
     /// The number of experiments to perform in parallel.
     ///
     /// Note that parallelism on Windows is currently not supported, and a value > 1 will abort.
@@ -68,6 +76,9 @@ impl Scenario {
             .unwrap();
         kwargs.set_item("elitist", self.elitist)?;
         kwargs.set_item("instances", (0..num_instances).collect::<Vec<_>>())?;
+        kwargs.set_item("deterministic", self.deterministic)?;
+        kwargs.set_item("log_file", self.log_file.as_ref().map(|path| path.as_os_str().clone()))?;
+        kwargs.set_item("exec_dir", self.exec_dir.as_ref().map(|path| path.as_os_str().clone()))?;
         kwargs.set_item("deterministic", self.deterministic)?;
         kwargs.set_item("n_jobs", self.num_jobs)?;
         kwargs.set_item("seed", self.seed)?;
