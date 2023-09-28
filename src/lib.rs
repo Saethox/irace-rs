@@ -38,14 +38,8 @@ fn register_site_packages() -> PyResult<()> {
         let sys = PyModule::import(py, "sys")?;
         let path = sys.getattr("path")?;
 
-        let venv =
-            std::env::var("PYO3_PYTHON_VENV").map_err(|e| PyValueError::new_err(e.to_string()))?;
-        path.call_method1("append", (venv,))?;
-        let site_packages = std::env::var("PYO3_PYTHON_SITE_PACKAGES")
-            .map_err(|e| PyValueError::new_err(e.to_string()))?;
-        path.call_method1("append", (site_packages,))?;
-        if let Ok(irace_home) = std::env::var("IRACE_HOME") {
-            path.call_method1("append", (irace_home,))?;
+        if let Ok(iracepy_home) = std::env::var("IRACEPY_HOME") {
+            path.call_method1("append", (iracepy_home,))?;
         }
 
         Ok::<(), PyErr>(())
