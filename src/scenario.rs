@@ -77,8 +77,14 @@ impl Scenario {
         kwargs.set_item("elitist", self.elitist)?;
         kwargs.set_item("instances", (0..num_instances).collect::<Vec<_>>())?;
         kwargs.set_item("deterministic", self.deterministic)?;
-        kwargs.set_item("log_file", self.log_file.as_ref().map(|path| path.as_os_str().clone()))?;
-        kwargs.set_item("exec_dir", self.exec_dir.as_ref().map(|path| path.as_os_str().clone()))?;
+        kwargs.set_item(
+            "log_file",
+            self.log_file.as_ref().map(|path| path.as_os_str().clone()),
+        )?;
+        kwargs.set_item(
+            "exec_dir",
+            self.exec_dir.as_ref().map(|path| path.as_os_str().clone()),
+        )?;
         kwargs.set_item("deterministic", self.deterministic)?;
         kwargs.set_item("n_jobs", self.num_jobs)?;
         kwargs.set_item("seed", self.seed)?;
