@@ -37,10 +37,17 @@ impl<P: Problem> DistributedInstance<P> {
 
     /// Unpacks the instance into a problem reference and evaluator.
     pub fn unpack(&self) -> (&P, Box<dyn Evaluate<Problem = P>>) {
-        (
-            self.problem.as_ref(),
-            self.evaluator.clone().into_evaluate(),
-        )
+        (self.problem(), self.evaluator())
+    }
+
+    /// Returns a reference to the `problem`.
+    pub fn problem(&self) -> &P {
+        self.problem.as_ref()
+    }
+
+    /// Returns an owned `evaluator`.
+    pub fn evaluator(&self) -> Box<dyn Evaluate<Problem = P>> {
+        self.evaluator.clone().into_evaluate()
     }
 }
 
